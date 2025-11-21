@@ -11,18 +11,18 @@ const Header: React.FC = () => {
           </div>
           <div>
             <h1 className="text-xl font-bold text-gray-900 tracking-tight">LeadScout AI</h1>
-            <p className="text-xs text-gray-500 font-medium">Powered by Gemini Maps Grounding</p>
+            <p className="text-xs text-gray-500 font-medium">Powered by Grok 4.1 Fast</p>
           </div>
         </div>
         
         <div className="flex items-center gap-4">
             <div className="hidden md:flex items-center gap-2 text-sm text-gray-600 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200">
                 <Database className="w-4 h-4 text-blue-500" />
-                <span>Live Maps Data</span>
+                <span>Smart Leads</span>
             </div>
              <div className="hidden md:flex items-center gap-2 text-sm text-gray-600 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200">
                 <Zap className="w-4 h-4 text-amber-500" />
-                <span>Instant Extraction</span>
+                <span>Fast Extraction</span>
             </div>
         </div>
       </div>

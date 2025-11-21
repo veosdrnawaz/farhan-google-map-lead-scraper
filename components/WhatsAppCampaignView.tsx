@@ -45,8 +45,10 @@ const WhatsAppCampaignView: React.FC<WhatsAppCampaignViewProps> = ({
     // Clone current messages to avoid losing existing ones if we are adding new leads
     const newMessages = { ...generatedMessages };
     
-    // Process in chunks to manage concurrency
-    const chunkSize = 3;
+    // Process in chunks of 1 to avoid hitting rate limits (429)
+    // Adding delay between requests is crucial for free/tiered API usage.
+    const chunkSize = 1;
+    
     for (let i = 0; i < total; i += chunkSize) {
         const chunk = filteredLeads.slice(i, i + chunkSize);
         
@@ -68,6 +70,11 @@ const WhatsAppCampaignView: React.FC<WhatsAppCampaignViewProps> = ({
 
         setGeneratedMessages({ ...newMessages });
         setProgress({ current: Math.min(i + chunkSize, total), total });
+        
+        // Add significant delay between chunks to respect strict rate limits (15 RPM)
+        if (i + chunkSize < total) {
+            await new Promise(resolve => setTimeout(resolve, 5000)); // 5s delay
+        }
     }
     
     setIsGenerating(false);
@@ -153,7 +160,7 @@ const WhatsAppCampaignView: React.FC<WhatsAppCampaignViewProps> = ({
                         style={{ width: `${(progress.current / progress.total) * 100}%` }}
                     ></div>
                     <p className="text-xs text-gray-500 text-right mt-1">
-                        Personalizing {progress.current} of {progress.total}...
+                        Personalizing {progress.current} of {progress.total} (Throttled to prevent errors)...
                     </p>
                 </div>
             )}

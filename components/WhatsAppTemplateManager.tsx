@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { MessageSquare, Save, Trash2, Plus, Edit2, Sparkles, Check, X, Copy } from 'lucide-react';
 import { WhatsAppTemplate } from '../types';
-import { GoogleGenAI } from "@google/genai";
-
-// Initialize Gemini for the AI rewrite feature
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+import { rewriteTemplate } from '../services/geminiService';
 
 interface WhatsAppTemplateManagerProps {
   templates: WhatsAppTemplate[];
@@ -107,28 +104,13 @@ const WhatsAppTemplateManager: React.FC<WhatsAppTemplateManagerProps> = ({
     if (!tempContent) return;
     setIsGenerating(true);
     try {
-        const modelId = "gemini-2.5-flash";
-        const prompt = `
-            Act as a world-class copywriter. Rewrite the following WhatsApp marketing message template to be more professional, engaging, and persuasive.
-            Keep the placeholders {name}, {address}, {rating}, {reviewCount}, {phoneNumber}, {category}, {website} exactly as they are.
-            
-            Current Template:
-            "${tempContent}"
-
-            Output ONLY the rewritten template text. Do not add conversational filler.
-        `;
-
-        const response = await ai.models.generateContent({
-            model: modelId,
-            contents: prompt,
-        });
-        
-        if (response.text) {
-            setTempContent(response.text.trim());
+        const rewritten = await rewriteTemplate(tempContent);
+        if (rewritten) {
+            setTempContent(rewritten);
         }
     } catch (e) {
         console.error(e);
-        alert("Failed to generate AI suggestion.");
+        alert("Failed to generate AI suggestion. You may have hit the rate limit. Please try again in a few seconds.");
     } finally {
         setIsGenerating(false);
     }
