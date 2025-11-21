@@ -1,0 +1,5 @@
+{
+  "name": "LeadScout AI - Maps Extractor",
+  "description": "A powerful lead generation tool using Google Maps Grounding to extract business details and export them for Google Sheets.",
+  "requestFramePermissions": []
+}
